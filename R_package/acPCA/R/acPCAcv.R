@@ -1,4 +1,36 @@
-acPCAcv <- function(X, Y, lambdas, centerX=T, scaleX=F, scaleY=F, nPC=2, fold=5, foldlab=NULL, kernel=c("linear", "gaussian"), bandwidth=NULL, perc=0.05, plot=T, quiet=F){
+#' Perform cross-validation to tune lambda
+#'
+#' @param X the n by p data matrix, where n is the number of samples. Missing values in X should be labeled as NA. If a whole sample in X is missing, it should be removed.
+#' @param Y the n by q confounder matrix, where n is the number of samples. Missing values in Y should be labeled as NA. 
+#' @param lambdas a vector with the tuning parameters, non-negative values.
+#' @param centerX center the columns in X. Default is True.
+#' @param scaleX scale the columns in X to unit standard deviation. Default is False.
+#' @param scaleY scale the columns in Y to unit standard deviation. Default is False.
+#' @param nPC number of principal components to compute
+#' @param kernel the kernel to use: "linear", "gaussian".
+#' @param bandwidth bandwidth h for Gaussian kernel. Optional. 
+#' @param fold the fold number for cross-validation. Default is 5.
+#' @param foldlab optional. A vector of labels for cross-validation, should take values from 1 to fold. Length of the vector should match with NROW(X).
+#' @param perc the best lambda is defined to be the smallest lambda with loss smaller than (max(loss)-min(loss))*perc + min(loss). 
+#' @param plot True or False. plot=T generates the diagnosis plot (lambda vs. loss). Default is True.
+#' @param quiet True or False. Output the progress of the program. Default is False. 
+#' @return Results for cross-validation
+#' \item{loss}{a vector with the loss. Same length as lambdas} 
+#' \item{best_lambda}{the best lambda after cross-validation}
+#' \item{...}{Input parameters for the function}
+#' @export
+#' @examples
+#' load_all()
+#' X <- data_example1$X; Y <- data_example1$Y 
+#'
+#' ##first tune lambda, and then use the best lambda. Linear kernel
+#' result_cv_linear <- acPCAcv(X=X, Y=Y, lambdas=seq(0, 1, 0.05), kernel="linear", nPC=2, plot=T)
+#' result_linear <- acPCA(X=X, Y=Y, lambda=result_cv$best_lambda, kernel="linear", nPC=2)
+#' 
+#' ##Gaussian kernel
+#' result_cv_gaussian <- acPCAcv(X=X, Y=Y, lambdas=seq(0, 1, 0.05), kernel="gaussian", bandwidth=1, nPC=2, plot=T)
+#' result_gaussian <- acPCA(X=X, Y=Y, lambda=result_cv$best_lambda, kernel="linear", bandwidth=1, nPC=2)
+acPCAcv <- function(X, Y, lambdas, centerX=T, scaleX=F, scaleY=F, nPC=2, kernel=c("linear", "gaussian"), bandwidth=NULL, fold=5, foldlab=NULL, perc=0.05, plot=T, quiet=F){
   ####check whether a whole row in X is missing
   Xmis <- apply(X, 1, function(row){sum(!is.na(row))})
   if (sum(Xmis==0)){
@@ -8,7 +40,10 @@ acPCAcv <- function(X, Y, lambdas, centerX=T, scaleX=F, scaleY=F, nPC=2, fold=5,
   if (dim(X)[1]!=dim(Y)[1]){
     stop("The numbers of samples in X ( nrow(X) ) and Y ( nrow(Y) ) do not match")
   }
-  
+  ####check whether the elements in lambdas are non-negative
+  if (sum(lambdas<0)){
+    stop("All elements in lambdas should be non-negative")
+  }
   nsam <- dim(X)[1] 
   p <- dim(X)[2]
   
@@ -110,5 +145,5 @@ acPCAcv <- function(X, Y, lambdas, centerX=T, scaleX=F, scaleY=F, nPC=2, fold=5,
     abline(v=best_lambda, col="blue")
     legend( "topright", legend=expression(paste("Best ", lambda)), lty=1, col="blue" ) 
   }
-  return(list(loss=loss, lambdas=lambdas, kernel=kernel, best_lambda=best_lambda))
+  return(list(loss=loss, best_lambda=best_lambda, lambdas=lambdas, kernel=kernel, bandwidth=bandwidth))
 }
