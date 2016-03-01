@@ -1,0 +1,8 @@
+Package: acPCA
+Title: Principal Component Analysis Adjusting for Confounding variation
+Version: 0.0.0.9000
+Authors@R: person(“Zhixiang”, “Lin”, email = “linzx06@gmail.com", role = c("aut", "cre"))
+Description: Simultaneously performs PCA and adjustment for confounding variation
+Depends: R (>= 3.2.1), 
+License: License: GPL-2
+LazyData: true
