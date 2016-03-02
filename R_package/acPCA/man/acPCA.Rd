@@ -37,6 +37,7 @@ Perform AC-PCA for dimension reduction
 }
 \examples{
 load_all()
+data(data_example1)
 X <- data_example1$X; Y <- data_example1$Y 
 
 ##use linear kernel

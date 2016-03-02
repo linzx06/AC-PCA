@@ -9,7 +9,7 @@
 #' @param nPC number of principal components to compute
 #' @param kernel the kernel to use: "linear", "gaussian".
 #' @param bandwidth bandwidth h for Gaussian kernel. Optional. 
-#' @param fold the fold number for cross-validation. Default is 5.
+#' @param fold the fold number for cross-validation. Default is 10.
 #' @param foldlab optional. A vector of labels for cross-validation, should take values from 1 to fold. Length of the vector should match with NROW(X).
 #' @param perc the best lambda is defined to be the smallest lambda with loss smaller than (max(loss)-min(loss))*perc + min(loss). 
 #' @param plot True or False. plot=T generates the diagnosis plot (lambda vs. loss). Default is True.
@@ -21,6 +21,7 @@
 #' @export
 #' @examples
 #' load_all()
+#' data(data_example1)
 #' X <- data_example1$X; Y <- data_example1$Y 
 #'
 #' ##first tune lambda, and then use the best lambda. Linear kernel
@@ -30,7 +31,7 @@
 #' ##Gaussian kernel
 #' result_cv_gaussian <- acPCAcv(X=X, Y=Y, lambdas=seq(0, 1, 0.05), kernel="gaussian", bandwidth=1, nPC=2, plot=T)
 #' result_gaussian <- acPCA(X=X, Y=Y, lambda=result_cv$best_lambda, kernel="linear", bandwidth=1, nPC=2)
-acPCAcv <- function(X, Y, lambdas, centerX=T, scaleX=F, scaleY=F, nPC=2, kernel=c("linear", "gaussian"), bandwidth=NULL, fold=5, foldlab=NULL, perc=0.05, plot=T, quiet=F){
+acPCAcv <- function(X, Y, lambdas, centerX=T, scaleX=F, scaleY=F, nPC=2, kernel=c("linear", "gaussian"), bandwidth=NULL, fold=10, foldlab=NULL, perc=0.05, plot=T, quiet=F){
   ####check whether a whole row in X is missing
   Xmis <- apply(X, 1, function(row){sum(!is.na(row))})
   if (sum(Xmis==0)){

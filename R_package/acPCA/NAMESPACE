@@ -2,4 +2,6 @@
 
 export(acPCA)
 export(acPCAcv)
+export(acSPC)
+export(acSPCcv)
 export(calkernel)

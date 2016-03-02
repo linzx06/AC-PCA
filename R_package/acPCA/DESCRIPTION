@@ -6,7 +6,7 @@ Description: R package for the manuscript "AC-PCA adjusts for confounding
     variation in transcriptome data and recovers the anatomical structure of
     neocortex"
 Depends:
-    R (>= 3.2.1),
-License: License:GPL-2, RSpectra
+    R (>= 3.2.1), RSpectra
+License: License:GPL-2
 LazyData: true
 RoxygenNote: 5.0.1

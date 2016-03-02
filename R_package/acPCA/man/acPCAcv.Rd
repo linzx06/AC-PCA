@@ -5,7 +5,7 @@
 \title{Perform cross-validation to tune lambda}
 \usage{
 acPCAcv(X, Y, lambdas, centerX = T, scaleX = F, scaleY = F, nPC = 2,
-  kernel = c("linear", "gaussian"), bandwidth = NULL, fold = 5,
+  kernel = c("linear", "gaussian"), bandwidth = NULL, fold = 10,
   foldlab = NULL, perc = 0.05, plot = T, quiet = F)
 }
 \arguments{
@@ -27,7 +27,7 @@ acPCAcv(X, Y, lambdas, centerX = T, scaleX = F, scaleY = F, nPC = 2,
 
 \item{bandwidth}{bandwidth h for Gaussian kernel. Optional.}
 
-\item{fold}{the fold number for cross-validation. Default is 5.}
+\item{fold}{the fold number for cross-validation. Default is 10.}
 
 \item{foldlab}{optional. A vector of labels for cross-validation, should take values from 1 to fold. Length of the vector should match with NROW(X).}
 
@@ -48,6 +48,7 @@ Perform cross-validation to tune lambda
 }
 \examples{
 load_all()
+data(data_example1)
 X <- data_example1$X; Y <- data_example1$Y 
 
 ##first tune lambda, and then use the best lambda. Linear kernel

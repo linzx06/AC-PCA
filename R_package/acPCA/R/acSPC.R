@@ -1,4 +1,35 @@
-acSPC <- function( X, Y, c1=NULL, c2, v_ini, v_substract=NULL, X4Y=NULL, kernel=c("linear", "gaussian"), bandwidth=NULL, centerX=T, scaleX=F, scaleY=F, maxiter=50, delta=10^-8, filter=T){
+#' Perform sparse AC-PCA
+#'
+#' @param X the n by p data matrix, where n is the number of samples. Missing values in X should be labeled as NA. If a whole sample in X is missing, it should be removed.
+#' @param Y the n by q confounder matrix, where n is the number of samples. Missing values in Y should be labeled as NA. 
+#' @param X4Y the "X" used to calculate the empirical Hilbert Schmidt criterion. Default is set to X. Optional.
+#' @param c1 tuning parameter. Default is set to v'X4Y'KX4Yv. Optional. 
+#' @param c2 tuning parameter controlling sparsity.
+#' @param v_ini the initial v. Recommended to be the estimate of the non-sparse version. 
+#' @param v_substract the principal components to be subtracted. A p by k matrix, where k is the number of PCs to be substracted. Optional.
+#' @param kernel the kernel to use: "linear", "gaussian".
+#' @param bandwidth bandwidth h for Gaussian kernel. Optional. 
+#' @param centerX center the columns in X. Default is True.
+#' @param scaleX scale the columns in X to unit standard deviation. Default is False.
+#' @param scaleY scale the columns in Y to unit standard deviation. Default is False.
+#' @param ... other parameters
+#' @return Results for sparse AC-PCA
+#' \item{v}{the sparse principal component} 
+#' \item{u}{the u vector}
+#' \item{converge}{whether the algorithm converged}
+#' @export
+#' @examples
+#' load_all()
+#' data(data_example5)
+#' X <- data_example5$X ###the data matrix
+#' Y <- data_example5$Y
+#'
+#' result1 <- acPCA(X=X, Y=Y, lambda=1, kernel="linear")
+#' v_ini <- result1$v[,1]
+#' result_spc1 <- acSPC( X=X, Y=Y, c2=0.5*sum(abs(v_ini)), 
+#'                       v_ini=v_ini, kernel="linear")
+#' ###examples with more details are provided in the function acSPCcv
+acSPC <- function( X, Y, X4Y=NULL, c1=NULL, c2, v_ini, v_substract=NULL, kernel=c("linear", "gaussian"), bandwidth=NULL, centerX=T, scaleX=F, scaleY=F, maxiter=50, delta=10^-8, filter=T){
   ####if Y is a vector, change it to a matrix
   if (is.null(dim(Y))){
     Y <- matrix(Y, ncol=1)
@@ -101,7 +132,7 @@ acSPC <- function( X, Y, c1=NULL, c2, v_ini, v_substract=NULL, X4Y=NULL, kernel=
   if (filter==T){
     v <- as.matrix(topthresfilter(v, top=0.01, alpha=0.5*10^-4))
   }
-  return(list(v=v, u=u, objec=valA, devia=devia, converge=converge))
+  return(list(v=v, u=u, converge=converge))
 }
 
 proj <- function( Y, S, V, utx, c1, c2, v_ini, tmin, tmax, iternum){
