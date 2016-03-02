@@ -1,0 +1,14 @@
+Package: acPCA
+Title: Principal Component Analysis Adjusting for Confounding variation
+Version: 0.9
+Authors@R: person("Zhixiang", "Lin", email = "linzx06@gmail.com", role = c("aut", "cre"))
+Description: R package for the manuscript "AC-PCA adjusts for confounding
+    variation in transcriptome data and recovers the anatomical structure of
+    neocortex"
+Depends: R (>= 3.2.1), RSpectra
+License: License:GPL-2
+LazyData: true
+RoxygenNote: 5.0.1
+Author: Zhixiang Lin [aut, cre]
+Maintainer: Zhixiang Lin <linzx06@gmail.com>
+Built: R 3.2.1; ; 2016-03-02 23:02:12 UTC; unix

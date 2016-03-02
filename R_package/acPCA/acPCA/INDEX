@@ -1,0 +1,6 @@
+acPCA                   Perform AC-PCA for dimension reduction
+acPCAcv                 Perform cross-validation to tune lambda
+acSPC                   Perform sparse AC-PCA
+acSPCcv                 Perform cross-validation to tune the sparsity
+                        parameter c2
+calkernel               Calculate the kernel matrix
