@@ -10,3 +10,4 @@ setwd("/Users/zhixianglin/AC-PCA/R_package/")
 install("acPCA")
 
 #install_github('linzx06/AC-PCA/tree/master/R_package','linzx06')
+
