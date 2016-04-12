@@ -2,7 +2,7 @@
 % Please edit documentation in R/acSPCcv.R
 \name{acSPCcv}
 \alias{acSPCcv}
-\title{Perform cross-validation to tune the sparsity parameter c2}
+\title{Perform cross-validation to tune the sparsity parameter c2 in function acSPC}
 \usage{
 acSPCcv(X, Y, c1 = NULL, c2s, v_ini, v_substract = NULL, X4Y = NULL,
   kernel = c("linear", "gaussian"), bandwidth = NULL, centerX = T,
@@ -50,7 +50,7 @@ Results for tuning the sparsity parameter c2
 \item{mse_sd}{a vector of standard deviations for the MSEs. Standard deviation across the folds is calculated.}
 }
 \description{
-Perform cross-validation to tune the sparsity parameter c2
+Perform cross-validation to tune the sparsity parameter c2 in function acSPC
 }
 \examples{
 load_all()

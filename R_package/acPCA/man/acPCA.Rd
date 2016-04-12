@@ -2,7 +2,7 @@
 % Please edit documentation in R/acPCA.R
 \name{acPCA}
 \alias{acPCA}
-\title{Perform AC-PCA for dimension reduction}
+\title{Perform AC-PCA for simultaneous dimension reduction and adjustment for confounding variation}
 \usage{
 acPCA(X, Y, lambda, centerX = T, scaleX = F, scaleY = F, nPC = 2,
   kernel = c("linear", "gaussian"), bandwidth = NULL)
@@ -33,7 +33,7 @@ The principal components and the projected data
 \item{...}{Input parameters for the function}
 }
 \description{
-Perform AC-PCA for dimension reduction
+Perform AC-PCA for simultaneous dimension reduction and adjustment for confounding variation
 }
 \examples{
 load_all()

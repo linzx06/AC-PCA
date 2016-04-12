@@ -2,7 +2,7 @@
 % Please edit documentation in R/acPCAcv.R
 \name{acPCAcv}
 \alias{acPCAcv}
-\title{Perform cross-validation to tune lambda}
+\title{Perform cross-validation to tune the lambda parameter in function acPCA}
 \usage{
 acPCAcv(X, Y, lambdas, centerX = T, scaleX = F, scaleY = F, nPC = 2,
   kernel = c("linear", "gaussian"), bandwidth = NULL, fold = 10,
@@ -44,7 +44,7 @@ Results for cross-validation
 \item{...}{Input parameters for the function}
 }
 \description{
-Perform cross-validation to tune lambda
+Perform cross-validation to tune the lambda parameter in function acPCA
 }
 \examples{
 load_all()

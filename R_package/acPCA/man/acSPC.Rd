@@ -2,7 +2,7 @@
 % Please edit documentation in R/acSPC.R
 \name{acSPC}
 \alias{acSPC}
-\title{Perform sparse AC-PCA}
+\title{Perform sparse AC-PCA for variable selection}
 \usage{
 acSPC(X, Y, X4Y = NULL, c1 = NULL, c2, v_ini, v_substract = NULL,
   kernel = c("linear", "gaussian"), bandwidth = NULL, centerX = T,
@@ -42,7 +42,7 @@ Results for sparse AC-PCA
 \item{converge}{whether the algorithm converged}
 }
 \description{
-Perform sparse AC-PCA
+Perform sparse AC-PCA for variable selection
 }
 \examples{
 load_all()
