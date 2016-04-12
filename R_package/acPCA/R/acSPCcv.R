@@ -1,4 +1,4 @@
-#' Perform cross-validation to tune the sparsity parameter c2
+#' Perform cross-validation to tune the sparsity parameter c2 in function acSPC
 #'
 #' @param X the n by p data matrix, where n is the number of samples. Missing values in X should be labeled as NA. If a whole sample in X is missing, it should be removed.
 #' @param Y the n by q confounder matrix, where n is the number of samples. Missing values in Y should be labeled as NA. 

@@ -1,4 +1,4 @@
-#' Perform AC-PCA for dimension reduction
+#' Perform AC-PCA for simultaneous dimension reduction and adjustment for confounding variation
 #'
 #' @param X the n by p data matrix, where n is the number of samples. Missing values in X should be labeled as NA. If a whole sample in X is missing, it should be removed.
 #' @param Y the n by q confounder matrix, where n is the number of samples. Missing values in Y should be labeled as NA. 
