@@ -7,7 +7,7 @@
 calkernel(Y, kernel, bandwidth, scaleY = F)
 }
 \arguments{
-\item{Y}{the n by q confounder matrix, where n is the number of samples. Missing values in Y should be labeled as NA.}
+\item{Y}{the n by q confounder matrix, where n is the number of samples, q is the number of confounding factors. Missing values in Y should be labeled as NA.}
 
 \item{kernel}{the kernel to use: "linear", "gaussian".}
 

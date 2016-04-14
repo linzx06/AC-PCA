@@ -10,9 +10,9 @@ acSPCcv(X, Y, c1 = NULL, c2s, v_ini, v_substract = NULL, X4Y = NULL,
   plot = T, quiet = F)
 }
 \arguments{
-\item{X}{the n by p data matrix, where n is the number of samples. Missing values in X should be labeled as NA. If a whole sample in X is missing, it should be removed.}
+\item{X}{the n by p data matrix, where n is the number of samples, p is the number of variables. Missing values in X should be labeled as NA. If a whole sample in X is missing, it should be removed.}
 
-\item{Y}{the n by q confounder matrix, where n is the number of samples. Missing values in Y should be labeled as NA.}
+\item{Y}{the n by q confounder matrix, where n is the number of samples, q is the number of confounding factors. Missing values in Y should be labeled as NA.}
 
 \item{c1}{tuning parameter. Default is set to v'X4Y'KX4Yv. Optional.}
 

@@ -9,9 +9,9 @@ acSPC(X, Y, X4Y = NULL, c1 = NULL, c2, v_ini, v_substract = NULL,
   scaleX = F, scaleY = F, maxiter = 50, delta = 10^-8, filter = T)
 }
 \arguments{
-\item{X}{the n by p data matrix, where n is the number of samples. Missing values in X should be labeled as NA. If a whole sample in X is missing, it should be removed.}
+\item{X}{the n by p data matrix, where n is the number of samples, p is the number of variables. Missing values in X should be labeled as NA. If a whole sample in X is missing, it should be removed.}
 
-\item{Y}{the n by q confounder matrix, where n is the number of samples. Missing values in Y should be labeled as NA.}
+\item{Y}{the n by q confounder matrix, where n is the number of samples, q is the number of confounding factors. Missing values in Y should be labeled as NA.}
 
 \item{X4Y}{the "X" used to calculate the empirical Hilbert Schmidt criterion. Default is set to X. Optional.}
 

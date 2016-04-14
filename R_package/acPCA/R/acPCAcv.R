@@ -1,7 +1,7 @@
 #' Perform cross-validation to tune the lambda parameter in function acPCA
 #'
-#' @param X the n by p data matrix, where n is the number of samples. Missing values in X should be labeled as NA. If a whole sample in X is missing, it should be removed.
-#' @param Y the n by q confounder matrix, where n is the number of samples. Missing values in Y should be labeled as NA. 
+#' @param X the n by p data matrix, where n is the number of samples, p is the number of variables. Missing values in X should be labeled as NA. If a whole sample in X is missing, it should be removed.
+#' @param Y the n by q confounder matrix, where n is the number of samples, q is the number of confounding factors. Missing values in Y should be labeled as NA.
 #' @param lambdas a vector with the tuning parameters, non-negative values.
 #' @param centerX center the columns in X. Default is True.
 #' @param scaleX scale the columns in X to unit standard deviation. Default is False.
