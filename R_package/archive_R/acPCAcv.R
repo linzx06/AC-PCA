@@ -137,7 +137,7 @@ acPCAcv <- function(X, Y, lambdas, centerX=T, scaleX=F, scaleY=F, nPC=2, kernel=
   Xv <- Xv[!labna,,]
   lambdas <- lambdas[!labna]
   ###calculate the loss
-  loss <- apply(Xv, 1, function(Xv1){sum(diag(crossprod(Xv1, K%*%Xv1)))})
+  loss <- apply(Xv, 1, function(Xv1, K){sum(diag(crossprod(Xv1, K%*%Xv1)))}, calkernel(Y, kernel, bandwidth))
   thres <- (max(loss)-min(loss))*perc + min(loss)
   best_lambda <- lambdas[min(which(loss<=thres))]
   if (plot==T){

@@ -3,8 +3,8 @@
 #' @param X the n by p data matrix, where n is the number of samples, p is the number of variables. Missing values in X should be labeled as NA. If a whole sample in X is missing, it should be removed.
 #' @param Y the n by q confounder matrix, where n is the number of samples, q is the number of confounding factors. Missing values in Y should be labeled as NA.
 #' @param X4Y the "X" used to calculate the empirical Hilbert Schmidt criterion. Default is set to X. Optional.
-#' @param c1 non-negative tuning parameter. Default is set to v'X4Y'KX4Yv. Optional. 
-#' @param c2s a vector of non-negative tuning parameters controlling sparsity.
+#' @param c1 tuning parameter. Default is set to v'X4Y'KX4Yv. Optional. 
+#' @param c2s a vector of tuning parameters controlling sparsity.
 #' @param v_ini the initial v. Recommended to be the estimate of the non-sparse version. 
 #' @param v_substract the principal components to be subtracted. A p by k matrix, where k is the number of PCs to be substracted. Optional.
 #' @param kernel the kernel to use: "linear", "gaussian".
@@ -64,9 +64,6 @@ acSPCcv <- function( X, Y, c1=NULL, c2s, v_ini, v_substract=NULL, X4Y=NULL, kern
   ####missing data
   X[is.na(X)] <- mean(X, na.rm=T)
   Y[is.na(Y)] <- mean(Y, na.rm=T)
-  if (!is.null(X4Y)){
-    X4Y[is.na(X4Y)] <- mean(X4Y, na.rm=T)
-  }
   
   K <- calkernel(Y, kernel, bandwidth)
   if (is.null(c1)){
