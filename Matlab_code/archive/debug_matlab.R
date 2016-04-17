@@ -1,34 +1,3 @@
-#' Perform sparse AC-PCA for variable selection
-#'
-#' @param X the n by p data matrix, where n is the number of samples, p is the number of variables. Missing values in X should be labeled as NA. If a whole sample in X is missing, it should be removed.
-#' @param Y the n by q confounder matrix, where n is the number of samples, q is the number of confounding factors. Missing values in Y should be labeled as NA.
-#' @param X4Y the "X" used to calculate the empirical Hilbert Schmidt criterion. Default is set to X. Optional.
-#' @param c1 non-negative tuning parameter. Default is set to v'X4Y'KX4Yv. Optional. 
-#' @param c2 non-negative tuning parameter controlling sparsity.
-#' @param v_ini the initial v. Recommended to be the estimate of the non-sparse version. 
-#' @param v_substract the principal components to be subtracted. A p by k matrix, where k is the number of PCs to be substracted. Optional.
-#' @param kernel the kernel to use: "linear", "gaussian".
-#' @param bandwidth bandwidth h for Gaussian kernel. Optional. 
-#' @param centerX center the columns in X. Default is True.
-#' @param scaleX scale the columns in X to unit standard deviation. Default is False.
-#' @param scaleY scale the columns in Y to unit standard deviation. Default is False.
-#' @param ... other parameters
-#' @return Results for sparse AC-PCA
-#' \item{v}{the sparse principal component} 
-#' \item{u}{the u vector}
-#' \item{converge}{whether the algorithm converged}
-#' @export
-#' @examples
-#' load_all()
-#' data(data_example5)
-#' X <- data_example5$X ###the data matrix
-#' Y <- data_example5$Y
-#'
-#' result1 <- acPCA(X=X, Y=Y, lambda=1, kernel="linear")
-#' v_ini <- result1$v[,1]
-#' result_spc1 <- acSPC( X=X, Y=Y, c2=0.5*sum(abs(v_ini)), 
-#'                       v_ini=v_ini, kernel="linear")
-#' ###examples with more details are provided in the function acSPCcv
 acSPC <- function( X, Y, X4Y=NULL, c1=NULL, c2, v_ini, v_substract=NULL, kernel=c("linear", "gaussian"), bandwidth=NULL, centerX=T, scaleX=F, scaleY=F, maxiter=50, delta=10^-8, filter=T){
   ####if Y is a vector, change it to a matrix
   if (is.null(dim(Y))){
@@ -233,4 +202,24 @@ topthresfilter <- function(v, top, alpha){
   thres <- mean(sort(abs(v), decreasing = T)[1:round(length(v)*top)])*alpha
   v[abs(v)<=thres] <- 0
   return(v)
+}
+
+calkernel <- function(Y, kernel, bandwidth, scaleY=F){
+  Y <- scale(Y, center = F, scale = scaleY)  
+  ####missing data
+  Y[is.na(Y)] <- mean(Y, na.rm=T)
+  
+  if (kernel=="linear"){
+    K <- tcrossprod(Y)
+  } else if (kernel=="gaussian"){
+    if (is.null(bandwidth)==T){
+      stop("For gaussian kernel, please specify the bandwidth") 
+    } else{
+      K <- as.matrix(dist(Y, method = "euclidean"))
+      K <- exp(-K^2/2/bandwidth^2)  
+    }
+  } else {
+    stop("Please select a valid kernel, linear kernel or gaussian kernel")
+  } 
+  return(K)
 }

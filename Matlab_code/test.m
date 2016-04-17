@@ -46,3 +46,15 @@ Delta = U(:,S>0)*diag(sqrt(S(S>0)));
 M = Delta'*X; 
 tmp1 = M'*M;
 tmp2 = X'*K*X;
+
+%% test acSPCcv and acSPC
+cd /Users/zhixianglin/AC-PCA/Matlab_code/
+result1cv = acPCAcv(X, Y,  0:0.05:2, 2, 'linear', 1);
+result1cv.best_lambda
+result1 = acPCA(X, Y, result1cv.best_lambda, 2, 'linear', 1);
+v_ini = result1.v;
+v_ini = v_ini(:,1);
+result2 = acSPC( X, Y, 'd', 'd', 0.5*sum(abs(v_ini)), v_ini, 'd', 'linear', 1);
+tic;
+result2cv = acSPCcv( X, Y, 'd', 'd', (1:(-0.1):0)*sum(abs(v_ini)), v_ini, 'd', 'linear', 1);
+toc;
