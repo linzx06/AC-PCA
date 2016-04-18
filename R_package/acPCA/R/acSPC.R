@@ -165,7 +165,6 @@ proj <- function( M, S, V, utx, c1, c2, v_ini, tmin, tmax, iternum){
       P <- crossprod(V, v)^2; 
       if (getnorm2(M%*%v) > sqrt(c1)){
         l <- proj_l2g_getl( S, P, c1)
-        #v <- v - (V%*%diag(1/(1 + 1/(l*S^2))))%*%crossprod(V,v)
         ####when there is only one non-zero singular value
         if (length(S)==1){
           v <- v - V*(1/(1 + 1/(l*S^2)))*as.numeric(crossprod(V,v))

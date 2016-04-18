@@ -57,19 +57,7 @@ acPCA <- function(X, Y, lambda, centerX=T, scaleX=F, scaleY=F, nPC=2, kernel=c("
   K <- calkernel(Y, kernel, bandwidth)
   
   ####the rotation, v
-  v <- try(matrix(eigs_sym(calAv, k=nPC, which = "LA", n=p, args=list(X=X, K=K, lambda=lambda))$vectors, ncol=nPC), silent=T)
-  if (class(v)=="try-error"){
-    v <- try(matrix(eigs_sym(calAv1, k=nPC, which = "LA", n=p, args=list(X=X, K=K, lambda=lambda))$vectors, ncol=nPC), silent=T)
-    if (class(v)=="try-error"){
-      v <- try(matrix(eigs_sym(calAv, k=nPC, which = "LA", n=p, args=list(X=X, K=K, lambda=lambda*(1+10^-8)))$vectors, ncol=nPC), silent=T) 
-      if (class(v)=="try-error"){
-        v <- try(matrix(eigs_sym(crossprod(X, (diag(dim(K)[1])-lambda*K)%*%X), k=nPC, which = "LA")$vectors, ncol=nPC), silent=T)
-        if (class(v)=="try-error"){
-          stop("Numerical issue on lambda, try another lambda close to the input lambda")
-        }
-      }
-    } 
-  }
+  v <- matrix(eigs_sym(calAv, k=nPC, which = "LA", n=p, args=list(X=X, K=K, lambda=lambda))$vectors, ncol=nPC)
   ####the projection, Xv
   Xv <- X%*%v
   return(list(Xv=Xv, v=v, lambda=lambda, kernel=kernel, bandwidth=bandwidth))
@@ -80,19 +68,4 @@ calAv <- function(v, args){
   K <- args$K
   lambda <- args$lambda
   return( crossprod(X, (diag(dim(K)[1])-lambda*K)%*%(X%*%matrix(v, ncol=1))) )
-}
-
-calAv1 <- function(v, args){
-  X <- args$X
-  K <- args$K
-  lambda <- args$lambda
-  return( crossprod(X, (diag(dim(K)[1])-lambda*K)%*%X%*%matrix(v, ncol=1)) )
-}
-
-calAv2 <- function(v, args) {
-  X <- args$X
-  K <- args$K
-  lambda <- args$lambda
-  Xv = X %*% v
-  as.numeric(crossprod(X, Xv - lambda * (K %*% Xv)))
 }

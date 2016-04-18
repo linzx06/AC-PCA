@@ -15,9 +15,9 @@ acSPC(X, Y, X4Y = NULL, c1 = NULL, c2, v_ini, v_substract = NULL,
 
 \item{X4Y}{the "X" used to calculate the empirical Hilbert Schmidt criterion. Default is set to X. Optional.}
 
-\item{c1}{tuning parameter. Default is set to v'X4Y'KX4Yv. Optional.}
+\item{c1}{non-negative tuning parameter. Default is set to v'X4Y'KX4Yv. Optional.}
 
-\item{c2}{tuning parameter controlling sparsity.}
+\item{c2}{non-negative tuning parameter controlling sparsity.}
 
 \item{v_ini}{the initial v. Recommended to be the estimate of the non-sparse version.}
 

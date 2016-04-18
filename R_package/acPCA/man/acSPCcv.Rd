@@ -14,9 +14,9 @@ acSPCcv(X, Y, c1 = NULL, c2s, v_ini, v_substract = NULL, X4Y = NULL,
 
 \item{Y}{the n by q confounder matrix, where n is the number of samples, q is the number of confounding factors. Missing values in Y should be labeled as NA.}
 
-\item{c1}{tuning parameter. Default is set to v'X4Y'KX4Yv. Optional.}
+\item{c1}{non-negative tuning parameter. Default is set to v'X4Y'KX4Yv. Optional.}
 
-\item{c2s}{a vector of tuning parameters controlling sparsity.}
+\item{c2s}{a vector of non-negative tuning parameters controlling sparsity.}
 
 \item{v_ini}{the initial v. Recommended to be the estimate of the non-sparse version.}
 

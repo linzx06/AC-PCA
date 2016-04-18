@@ -58,7 +58,6 @@ acPCAcv <- function(X, Y, lambdas, centerX=T, scaleX=F, scaleY=F, nPC=2, kernel=
       foldlab <- rep(NA, nsam)
       labs <- 1:nsam
       num <- floor(nsam/fold)
-      #res <- nsam - num*fold
       for (i in 1:fold){
         tmp <- sample(1:length(labs), num)
         foldlab[labs[tmp]] <- i
@@ -80,28 +79,8 @@ acPCAcv <- function(X, Y, lambdas, centerX=T, scaleX=F, scaleY=F, nPC=2, kernel=
   
   ####variable with the largest magnitude of loading
   K <- calkernel(Y, kernel, bandwidth)
-  maxlab <- maxlab_sign <- matrix(nrow=length(lambdas), ncol=nPC)
-  for (llab in 1:length(lambdas)){
-    lambda <- lambdas[llab]
-    #vA <- matrix(eigs_sym(calAv, k=nPC, which = "LA", n=p, args=list(X=X, K=K, lambda=lambda))$vectors, ncol=nPC)
-    vA <- try(matrix(eigs_sym(calAv, k=nPC, which = "LA", n=p, args=list(X=X, K=K, lambda=lambda))$vectors, ncol=nPC), silent=T)
-    if (class(vA)=="try-error"){
-      vA <- try(matrix(eigs_sym(calAv1, k=nPC, which = "LA", n=p, args=list(X=X, K=K, lambda=lambda))$vectors, ncol=nPC), silent=T)
-      if (class(vA)=="try-error"){
-        vA <- try(matrix(eigs_sym(calAv2, k=nPC, which = "LA", n=p, args=list(X=X, K=K, lambda=lambda) )$vectors, ncol=nPC), silent=T)
-        if (class(vA)=="try-error"){
-          vA <- try(matrix(eigs_sym(crossprod(X, (diag(dim(K)[1])-lambda*K)%*%X), k=nPC, which = "LA")$vectors, ncol=nPC))
-        }
-      } 
-    }
-    maxlab[llab,] <- apply(abs(vA), 2, which.max)
-    if (nPC==1){
-      maxlab_sign[llab,] <- sign(vA[maxlab[llab,],])
-    } else {
-      maxlab_sign[llab,] <- sign(diag(vA[maxlab[llab,],]))  
-    }
-  }
-  
+
+  vS <- array(dim=c(length(lambdas), p, nPC))
   for (skip in 1:fold){
     if (!quiet){
       print(paste("Running fold", skip)) 
@@ -110,32 +89,24 @@ acPCAcv <- function(X, Y, lambdas, centerX=T, scaleX=F, scaleY=F, nPC=2, kernel=
     Ytmp <- as.matrix(Y[foldlab!=skip,])
     ####calculate kernel matrix for Y
     Ktmp <- calkernel(Ytmp, kernel, bandwidth)
-    
     for (llab in 1:length(lambdas)){
       lambda <- lambdas[llab]
-      #print(lambda)
-      v <- try(matrix(eigs_sym(calAv, k=nPC, which = "LA", n=p, args=list(X=Xtmp, K=Ktmp, lambda=lambda))$vectors, ncol=nPC), silent=T)
-      if (class(v)=="try-error"){
-        v <- try(matrix(eigs_sym(calAv1, k=nPC, which = "LA", n=p, args=list(X=Xtmp, K=Ktmp, lambda=lambda))$vectors, ncol=nPC), silent=T)
-        if (class(v)=="try-error"){
-          v <- try(matrix(eigs_sym(crossprod(Xtmp, (diag(dim(Ktmp)[1])-lambda*Ktmp)%*%Xtmp), k=nPC, which = "LA")$vectors, ncol=nPC), silent=T)
-        } 
-      }
-      if (class(v)!="try-error"){
+      v <- matrix(eigs_sym(calAv, k=nPC, which = "LA", n=p, args=list(X=Xtmp, K=Ktmp, lambda=lambda))$vectors, ncol=nPC) 
+      if (skip==1){
+        vS[llab, ,] <- v
+        Xv[llab, which(foldlab==skip),] <- X[which(foldlab==skip),]%*%v  
+      } else {
         if (nPC==1){
-          v <- v*sign(v[maxlab[llab,],])*maxlab_sign[llab,]
+          v <- v*(2*as.numeric( sum(abs(vS[llab, ,] - as.numeric(v))) < sum(abs(vS[llab, ,] + as.numeric(v))) ) - 1)
           Xv[llab, which(foldlab==skip),] <- X[which(foldlab==skip),]%*%v  
-        } else {
-          v <- v%*%diag(sign(diag(v[maxlab[llab,],]))*maxlab_sign[llab,])
-          Xv[llab, which(foldlab==skip),] <- X[which(foldlab==skip),]%*%v   
+        } else{
+          v <- v%*%diag(2*as.numeric(apply(abs(vS[llab, ,] - v), 2, sum) < apply(abs(vS[llab, ,] + v), 2, sum)) - 1)
+          Xv[llab, which(foldlab==skip),] <- X[which(foldlab==skip),]%*%v  
         }
-      } 
+      }
     }
   }
-  ###exclude the lambdas with numerical issues
-  labna <- apply(Xv, 1, function(xv){sum(is.na(xv))})!=0
-  Xv <- Xv[!labna,,]
-  lambdas <- lambdas[!labna]
+  
   ###calculate the loss
   loss <- apply(Xv, 1, function(Xv1){sum(diag(crossprod(Xv1, K%*%Xv1)))})
   thres <- (max(loss)-min(loss))*perc + min(loss)
