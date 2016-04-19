@@ -11,7 +11,7 @@ R package
 
 A) To install the R package:
 
-1. Download acPCA_version_number.tar.gz in "linzx06/AC-PCA/R_package/";
+1. Download 'acPCA_version_number.tar.gz' in "linzx06/AC-PCA/R_package/";
 
 2. In R/Rstudio, type install.packages("acPCA_version_number.tar.gz", repos = NULL, type="source")
 
