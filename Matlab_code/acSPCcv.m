@@ -66,7 +66,7 @@ if (sum(Xmis==0))
     error('some samples in X is missing');
 end
 [nX, ~] = size(X);
-[nY, q] = size(Y);
+[nY, ~] = size(Y);
 
 % check whether the number of samples in X and Y match
 if (nX~=nY)

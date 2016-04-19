@@ -99,43 +99,71 @@ end
   
 K = calkernel(Y, kernel, bandwidth);
 
-% variable with the largest magnitude of loading, make sure signs match
-maxlab = nan(length(lambdas), nPC);
-maxlab_sign = maxlab;
-
 optseigs.isreal = 1; 
 optseigs.issym = 1;
-for lab = 1:length(lambdas)
-    lambda = lambdas(lab);
-    calAv = @(v) (X' - lambda*X'*K)*(X*v);
-    [V,~] = eigs(calAv,p,nPC,'LA', optseigs);
-    [~,I] = max(abs(V));
-    maxlab(lab,:) = I;
-    maxlab_sign(lab,:) = diag( sign(V(I,:)))'; 
-end
-Xv = nan(length(lambda), nX, nPC);
-for skip = 1:opts.fold
-    if (~opts.quiet)
-        disp(['Running fold ' num2str(skip)]);
+
+if (nPC>1)
+    vS = nan(length(lambdas), p, nPC);
+    Xv = nan(length(lambdas), nX, nPC);
+    for skip = 1:opts.fold
+        if (~opts.quiet)
+            disp(['Running fold ' num2str(skip)]);
+        end
+        % CV datasets
+        Xtmp = X(foldlab~=skip,:);
+        Ytmp = Y(foldlab~=skip,:);
+        Ktmp = calkernel(Ytmp, kernel, bandwidth);
+        for lab = 1:length(lambdas)
+            lambda = lambdas(lab);
+            calAvtmp = @(v) (Xtmp' - lambda*Xtmp'*Ktmp)*(Xtmp*v);
+            [Vtmp,~] = eigs(calAvtmp,p,nPC,'LA', optseigs);
+            if (skip == 1) 
+                vS(lab, :, :) = Vtmp;
+                Xv(lab, foldlab==skip,:) = X(foldlab==skip,:)*Vtmp;
+            else
+                % make sure the signs of Vtmp match
+                Vtmp = Vtmp*diag( 2*(sum( abs(squeeze(vS(lab, :, :)) - Vtmp) ) < sum( abs(squeeze(vS(lab, :, :)) + Vtmp) ) ) -1);
+                Xv(lab, foldlab==skip,:) = X(foldlab==skip,:)*Vtmp;
+            end
+        end
     end
-    % CV datasets
-    Xtmp = X(foldlab~=skip,:);
-    Ytmp = Y(foldlab~=skip,:);
-    Ktmp = calkernel(Ytmp, kernel, bandwidth);
+    % calculate the loss
+    loss = nan(length(lambdas),1);
     for lab = 1:length(lambdas)
-        lambda = lambdas(lab);
-        calAvtmp = @(v) (Xtmp' - lambda*Xtmp'*Ktmp)*(Xtmp*v);
-        [Vtmp,~] = eigs(calAvtmp,p,nPC,'LA', optseigs);
-        Vtmp = Vtmp * diag(sign(diag(Vtmp(maxlab(lab,:),:)))) * diag(maxlab_sign(lab,:));
-        Xv(lab, foldlab==skip,:) = X(foldlab==skip,:)*Vtmp;
+        loss(lab) = sum(diag(squeeze(Xv(lab,:,:))'*K*squeeze(Xv(lab,:,:))));
+    end
+else
+    vS = nan(length(lambdas), p);
+    Xv = nan(length(lambdas), nX);
+    for skip = 1:opts.fold
+        if (~opts.quiet)
+            disp(['Running fold ' num2str(skip)]);
+        end
+        % CV datasets
+        Xtmp = X(foldlab~=skip,:);
+        Ytmp = Y(foldlab~=skip,:);
+        Ktmp = calkernel(Ytmp, kernel, bandwidth);
+        for lab = 1:length(lambdas)
+            lambda = lambdas(lab);
+            calAvtmp = @(v) (Xtmp' - lambda*Xtmp'*Ktmp)*(Xtmp*v);
+            [Vtmp,~] = eigs(calAvtmp,p,nPC,'LA', optseigs);
+            if (skip == 1) 
+                vS(lab, :) = Vtmp;
+                Xv(lab, foldlab==skip) = X(foldlab==skip,:)*Vtmp;
+            else
+                % make sure the signs of Vtmp match
+                Vtmp = Vtmp*( 2*(sum( abs((vS(lab, :))' - Vtmp) ) < sum( abs( (vS(lab, :))' + Vtmp) ) ) -1);
+                Xv(lab, foldlab==skip,:) = X(foldlab==skip,:)*Vtmp;
+            end
+        end
+    end
+    % calculate the loss
+    loss = nan(length(lambdas),1);
+    for lab = 1:length(lambdas)
+        loss(lab) = Xv(lab,:)*K*Xv(lab,:)';
     end
 end
 
-% calculate the loss
-loss = nan(length(lambdas),1);
-for lab = 1:length(lambdas)
-    loss(lab) = sum(diag(squeeze(Xv(lab,:,:))'*K*squeeze(Xv(lab,:,:))));
-end
 thres = (max(loss)-min(loss))*opts.perc + min(loss);
 best_lambda = min(lambdas(loss<=thres));
 
