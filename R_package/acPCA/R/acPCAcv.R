@@ -26,11 +26,11 @@
 #'
 #' ##first tune lambda, and then use the best lambda. Linear kernel
 #' result_cv_linear <- acPCAcv(X=X, Y=Y, lambdas=seq(0, 1, 0.05), kernel="linear", nPC=2, plot=T)
-#' result_linear <- acPCA(X=X, Y=Y, lambda=result_cv$best_lambda, kernel="linear", nPC=2)
+#' result_linear <- acPCA(X=X, Y=Y, lambda=result_cv_linear$best_lambda, kernel="linear", nPC=2)
 #' 
 #' ##Gaussian kernel
 #' result_cv_gaussian <- acPCAcv(X=X, Y=Y, lambdas=seq(0, 1, 0.05), kernel="gaussian", bandwidth=1, nPC=2, plot=T)
-#' result_gaussian <- acPCA(X=X, Y=Y, lambda=result_cv$best_lambda, kernel="linear", bandwidth=1, nPC=2)
+#' result_gaussian <- acPCA(X=X, Y=Y, lambda=result_cv_gaussian$best_lambda, kernel="gaussian", bandwidth=1, nPC=2)
 acPCAcv <- function(X, Y, lambdas, centerX=T, scaleX=F, scaleY=F, nPC=2, kernel=c("linear", "gaussian"), bandwidth=NULL, fold=10, foldlab=NULL, perc=0.05, plot=T, quiet=F){
   ####check whether a whole row in X is missing
   Xmis <- apply(X, 1, function(row){sum(!is.na(row))})
