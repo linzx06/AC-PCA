@@ -1,16 +1,16 @@
 #' Simulated data example 2
 #'
-#' In this simulated example, the confounder is a factor with three levels, corresponding to three groups. 
-#' Instead of assuming that the confounder affects all variables (example 1), 
-#' we assume that it affects only a subset of variables (half of the variables in this example).
+#' In this simulated example, the confounder is assumed to be continuous and it con
+#' tributes a global trend to the data. 
 #' Here are details for the data:
 #'
 #' \itemize{
-#'   \item X the N by p data matrix, number of samples=30, number of variables=400
-#'   \item Y the N by q confounder matrix, q=3, representing three groups of data
+#'   \item X the N by p data matrix, number of samples=10, number of variables=400
+#'   \item Y the N by q confounder matrix, q=1, takes value from 1 to 10, representing a continuous confounder
 #'   \item lab the labels (used in the plots in the user's guide)
 #'   \item colors colors of the labels (used in the plots in the user's guide)
 #'   \item true_pattern the true underlying latent pattern
+#'   \item confound_pattern the pattern for the confounder
 #' }
 #'
 #' @docType data

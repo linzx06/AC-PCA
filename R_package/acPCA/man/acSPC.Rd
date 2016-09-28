@@ -6,7 +6,8 @@
 \usage{
 acSPC(X, Y, X4Y = NULL, c1 = NULL, c2, v_ini, v_substract = NULL,
   kernel = c("linear", "gaussian"), bandwidth = NULL, centerX = T,
-  scaleX = F, scaleY = F, maxiter = 50, delta = 10^-8, filter = T)
+  centerY = T, scaleX = F, scaleY = F, maxiter = 50, delta = 10^-8,
+  filter = T)
 }
 \arguments{
 \item{X}{the n by p data matrix, where n is the number of samples, p is the number of variables. Missing values in X should be labeled as NA. If a whole sample in X is missing, it should be removed.}
@@ -28,6 +29,8 @@ acSPC(X, Y, X4Y = NULL, c1 = NULL, c2, v_ini, v_substract = NULL,
 \item{bandwidth}{bandwidth h for Gaussian kernel. Optional.}
 
 \item{centerX}{center the columns in X. Default is True.}
+
+\item{centerY}{center the columns in Y. Default is True.}
 
 \item{scaleX}{scale the columns in X to unit standard deviation. Default is False.}
 

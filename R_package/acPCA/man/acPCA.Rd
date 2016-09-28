@@ -4,7 +4,8 @@
 \alias{acPCA}
 \title{Perform AC-PCA for simultaneous dimension reduction and adjustment for confounding variation}
 \usage{
-acPCA(X, Y, lambda, centerX = T, scaleX = F, scaleY = F, nPC = 2,
+acPCA(X, Y, nPC, lambda, eval = F, numPerm = 100, alpha = 0.05,
+  plot = T, centerX = T, centerY = T, scaleX = F, scaleY = F,
   kernel = c("linear", "gaussian"), bandwidth = NULL)
 }
 \arguments{
@@ -12,15 +13,26 @@ acPCA(X, Y, lambda, centerX = T, scaleX = F, scaleY = F, nPC = 2,
 
 \item{Y}{the n by q confounder matrix, where n is the number of samples, q is the number of confounding factors. Missing values in Y should be labeled as NA.}
 
+\item{nPC}{number of principal components to compute}
+
 \item{lambda}{the tuning parameter, non-negative.}
 
+\item{eval}{True or False. eval=T evaluates the significance of the PCs. Default is F.}
+
+\item{numPerm}{the number of permutations to evaluate the significance of the PCs. Default is 100.}
+
+\item{alpha}{the significance level. Default is 0.05. If the kth PC is not significant, we don't consider the PCs after it.
+If the eigenvalue and variance explained by the PCs give inconsistent results, we choose the maximum number of significant PCs.}
+
+\item{plot}{True or False. plot=T generates the plots. Default is True.}
+
 \item{centerX}{center the columns in X. Default is True.}
+
+\item{centerY}{center the columns in Y. Default is True.}
 
 \item{scaleX}{scale the columns in X to unit standard deviation. Default is False.}
 
 \item{scaleY}{scale the columns in Y to unit standard deviation. Default is False.}
-
-\item{nPC}{number of principal components to compute}
 
 \item{kernel}{the kernel to use: "linear", "gaussian".}
 
@@ -30,6 +42,12 @@ acPCA(X, Y, lambda, centerX = T, scaleX = F, scaleY = F, nPC = 2,
 The principal components and the projected data
 \item{v}{the principal components, p by nPC matrix} 
 \item{Xv}{the projected data, i.e. X times v}
+\item{eigenvalueX}{eigenvalues for the PCs}
+\item{varianceX}{variance explained by the PCs}
+\item{varianceX_perc}{percentage of total variance in X explained by the PCs. If eval=F, NA is returned.}
+\item{eigenvalueXperm}{eigenvalues for the PCs, permutation. If eval=F, NA is returned.}
+\item{varianceXperm}{variance explained by the PCs, permutation. If eval=F, NA is returned.}
+\item{sigPC}{the significant PCs. If eval=F, NA is returned.}
 \item{...}{Input parameters for the function}
 }
 \description{

@@ -6,8 +6,8 @@
 \usage{
 acSPCcv(X, Y, c1 = NULL, c2s, v_ini, v_substract = NULL, X4Y = NULL,
   kernel = c("linear", "gaussian"), bandwidth = NULL, centerX = T,
-  scaleX = F, scaleY = F, maxiter = 25, delta = 10^-4, fold = 10,
-  plot = T, quiet = F)
+  centerY = T, scaleX = F, scaleY = F, maxiter = 25, delta = 10^-4,
+  fold = 10, plot = T, quiet = F)
 }
 \arguments{
 \item{X}{the n by p data matrix, where n is the number of samples, p is the number of variables. Missing values in X should be labeled as NA. If a whole sample in X is missing, it should be removed.}
@@ -29,6 +29,8 @@ acSPCcv(X, Y, c1 = NULL, c2s, v_ini, v_substract = NULL, X4Y = NULL,
 \item{bandwidth}{bandwidth h for Gaussian kernel. Optional.}
 
 \item{centerX}{center the columns in X. Default is True.}
+
+\item{centerY}{center the columns in Y. Default is True.}
 
 \item{scaleX}{scale the columns in X to unit standard deviation. Default is False.}
 
@@ -56,8 +58,7 @@ Perform cross-validation to tune the sparsity parameter c2 in function acSPC
 load_all()
 data(data_example5)
 X <- data_example5$X; Y <- data_example5$Y
-result1cv <- acPCAcv(X=X, Y=Y, lambdas=seq(0, 2, 0.05), kernel="linear", plot=F, quiet=T)
-result1 <- acPCA(X=X, Y=Y, lambda=result1cv$best_lambda, kernel="linear")
+result1 <- acPCA(X=X, Y=Y, lambda=1, kernel="linear")
 v_ini <- result1$v[,1]
 resultcv_spc1_coarse <- acSPCcv( X=X, Y=Y, c2s=seq(1, 0, -0.1)*sum(abs(v_ini)), 
                                  v_ini=v_ini, kernel="linear") 

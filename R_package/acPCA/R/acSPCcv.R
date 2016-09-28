@@ -10,6 +10,7 @@
 #' @param kernel the kernel to use: "linear", "gaussian".
 #' @param bandwidth bandwidth h for Gaussian kernel. Optional. 
 #' @param centerX center the columns in X. Default is True.
+#' @param centerY center the columns in Y. Default is True.
 #' @param scaleX scale the columns in X to unit standard deviation. Default is False.
 #' @param scaleY scale the columns in Y to unit standard deviation. Default is False.
 #' @param fold the fold number for cross-validation. Default is 10.
@@ -26,15 +27,14 @@
 #' load_all()
 #' data(data_example5)
 #' X <- data_example5$X; Y <- data_example5$Y
-#' result1cv <- acPCAcv(X=X, Y=Y, lambdas=seq(0, 2, 0.05), kernel="linear", plot=F, quiet=T)
-#' result1 <- acPCA(X=X, Y=Y, lambda=result1cv$best_lambda, kernel="linear")
+#' result1 <- acPCA(X=X, Y=Y, lambda=1, kernel="linear")
 #' v_ini <- result1$v[,1]
 #' resultcv_spc1_coarse <- acSPCcv( X=X, Y=Y, c2s=seq(1, 0, -0.1)*sum(abs(v_ini)), 
 #'                                  v_ini=v_ini, kernel="linear") 
 #' resultcv_spc1_fine <- acSPCcv( X=X, Y=Y, c2s=seq(0.7, 0.4, -0.02)*sum(abs(v_ini)), 
 #'                                v_ini=v_ini, kernel="linear") 
 #' result_spc1 <- acSPC( X=X, Y=Y, c2=resultcv_spc1_fine$best_c2, v_ini=v_ini, kernel="linear") 
-acSPCcv <- function( X, Y, c1=NULL, c2s, v_ini, v_substract=NULL, X4Y=NULL, kernel=c("linear", "gaussian"), bandwidth=NULL, centerX=T, scaleX=F, scaleY=F, maxiter=25, delta=10^-4, fold=10, plot=T, quiet=F){
+acSPCcv <- function( X, Y, c1=NULL, c2s, v_ini, v_substract=NULL, X4Y=NULL, kernel=c("linear", "gaussian"), bandwidth=NULL, centerX=T, centerY=T, scaleX=F, scaleY=F, maxiter=25, delta=10^-4, fold=10, plot=T, quiet=F){
   ####if Y is a vector, change it to a matrix
   if (is.null(dim(Y))){
     Y <- matrix(Y, ncol=1)
@@ -60,7 +60,7 @@ acSPCcv <- function( X, Y, c1=NULL, c2s, v_ini, v_substract=NULL, X4Y=NULL, kern
   }
   
   X <- scale(X, center = centerX, scale = scaleX)  
-  Y <- scale(Y, center = F, scale = scaleY)  
+  Y <- scale(Y, center = centerY, scale = scaleY)  
   ####missing data
   X[is.na(X)] <- mean(X, na.rm=T)
   Y[is.na(Y)] <- mean(Y, na.rm=T)
@@ -101,9 +101,9 @@ acSPCcv <- function( X, Y, c1=NULL, c2s, v_ini, v_substract=NULL, X4Y=NULL, kern
         difsqr[f, i] <- sum(X[lab==f]^2)  
       } else {
         if (is.null(X4Y)){
-          tmp <- acSPC(X=X_cv, Y=Y, c1=c1, c2=c2, v_ini=v_ini, v_substract=v_substract, X4Y=X, kernel=kernel, bandwidth=bandwidth, centerX=centerX, scaleX=scaleX, scaleY=scaleY, maxiter=maxiter, delta=delta, filter=F)   
+          tmp <- acSPC(X=X_cv, Y=Y, c1=c1, c2=c2, v_ini=v_ini, v_substract=v_substract, X4Y=X, kernel=kernel, bandwidth=bandwidth, centerX=centerX, centerY=centerY, scaleX=scaleX, scaleY=scaleY, maxiter=maxiter, delta=delta, filter=F)   
         } else {
-          tmp <- acSPC(X=X_cv, Y=Y, c1=c1, c2=c2, v_ini=v_ini, v_substract=v_substract, X4Y=X4Y, kernel=kernel, bandwidth=bandwidth, centerX=centerX, scaleX=scaleX, scaleY=scaleY, maxiter=maxiter, delta=delta, filter=F)
+          tmp <- acSPC(X=X_cv, Y=Y, c1=c1, c2=c2, v_ini=v_ini, v_substract=v_substract, X4Y=X4Y, kernel=kernel, bandwidth=bandwidth, centerX=centerX, centerY=centerY, scaleX=scaleX, scaleY=scaleY, maxiter=maxiter, delta=delta, filter=F)
         }
         v <- tmp$v; u <- tmp$u
         tmp <- tcrossprod((sum((X_cv%*%v)*u)*u), v)

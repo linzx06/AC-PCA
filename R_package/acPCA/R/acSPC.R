@@ -10,6 +10,7 @@
 #' @param kernel the kernel to use: "linear", "gaussian".
 #' @param bandwidth bandwidth h for Gaussian kernel. Optional. 
 #' @param centerX center the columns in X. Default is True.
+#' @param centerY center the columns in Y. Default is True.
 #' @param scaleX scale the columns in X to unit standard deviation. Default is False.
 #' @param scaleY scale the columns in Y to unit standard deviation. Default is False.
 #' @param ... other parameters
@@ -29,7 +30,7 @@
 #' result_spc1 <- acSPC( X=X, Y=Y, c2=0.5*sum(abs(v_ini)), 
 #'                       v_ini=v_ini, kernel="linear")
 #' ###examples with more details are provided in the function acSPCcv
-acSPC <- function( X, Y, X4Y=NULL, c1=NULL, c2, v_ini, v_substract=NULL, kernel=c("linear", "gaussian"), bandwidth=NULL, centerX=T, scaleX=F, scaleY=F, maxiter=50, delta=10^-8, filter=T){
+acSPC <- function( X, Y, X4Y=NULL, c1=NULL, c2, v_ini, v_substract=NULL, kernel=c("linear", "gaussian"), bandwidth=NULL, centerX=T, centerY=T, scaleX=F, scaleY=F, maxiter=50, delta=10^-8, filter=T){
   ####if Y is a vector, change it to a matrix
   if (is.null(dim(Y))){
     Y <- matrix(Y, ncol=1)
@@ -51,7 +52,7 @@ acSPC <- function( X, Y, X4Y=NULL, c1=NULL, c2, v_ini, v_substract=NULL, kernel=
   }
   
   X <- scale(X, center = centerX, scale = scaleX)  
-  Y <- scale(Y, center = F, scale = scaleY)  
+  Y <- scale(Y, center = centerY, scale = scaleY)  
   ####missing data
   X[is.na(X)] <- mean(X, na.rm=T)
   Y[is.na(Y)] <- mean(Y, na.rm=T)

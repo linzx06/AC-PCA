@@ -6,18 +6,18 @@
 \title{Simulated data example 3}
 \format{A list with multiple elements}
 \description{
-In this simulated example, the confounder is assumed to be continuous and it con
-tributes a global trend to the data. 
+The confounder is unobserved and we only know the primary variable of interest (the biological conditions). 
+There are 10 biological conditions, each with 3 replicates. 
+The variation is shared among replicates for half of the genes and not shared for the other genes.
 Here are details for the data:
 }
 \details{
 \itemize{
-  \item X the N by p data matrix, number of samples=10, number of variables=400
-  \item Y the N by q confounder matrix, q=1, takes value from 1 to 10, representing a continuous confounder
-  \item lab the labels (used in the plots in the user's guide)
-  \item colors colors of the labels (used in the plots in the user's guide)
+  \item X the N by p data matrix, number of samples=30, number of variables=400
+  \item Y the N by q confounder matrix, q=30. Y is designed such that samples within the
+   same biological condition are shrinked together. Details are provided in the user's guide.
+  \item lab labels for the biological conditions.
   \item true_pattern the true underlying latent pattern
-  \item confound_pattern the pattern for the confounder
 }
 }
 \examples{
