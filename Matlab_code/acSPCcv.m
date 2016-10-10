@@ -28,6 +28,7 @@ function [ obj ] = acSPCcv( X, Y, X4Y, c1, c2s, v_ini, v_substract, kernel, band
 % kernel, it won't affect the result.
 % opts: optional, some other options:
 % opts.centerX: center the columns in X. Default is 1(True).
+% opts.centerY: center the columns in Y. Default is 1(True).
 % opts.scaleX: scale the columns in X to unit standard deviation. Default is 0(False).
 % opts.scaleY: scale the columns in Y to unit standard deviation. Default is 0(False).
 % opts.fold: the fold number for cross-validation. Default is 10.
@@ -48,6 +49,7 @@ function [ obj ] = acSPCcv( X, Y, X4Y, c1, c2s, v_ini, v_substract, kernel, band
 
 if nargin < 10
 	opts.centerX = 1;
+    opts.centerY = 1; 
     opts.scaleX = 0;
 	opts.scaleY = 0;
     opts.fold = 10;
@@ -84,6 +86,10 @@ end
 % center the X matrix
 if (opts.centerX)
     X = X-repmat(mean(X,'omitnan'),nX,1);
+end
+% center the Y matrix
+if (opts.centerY)
+    Y = Y-repmat(mean(Y,'omitnan'),nY,1);
 end
 % scale the X matrix
 if (opts.scaleX)

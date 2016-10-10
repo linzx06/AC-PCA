@@ -5,15 +5,16 @@ dataA = load('data_example1.mat');
 X = dataA.X;
 Y = dataA.Y;
 lab = dataA.lab;
-colors = dataA.colors;
+group = dataA.group;
 true_pattern = dataA.true_pattern;
 % In this simulated example, the confounder is a factor with three levels, 
 % corresponding to three groups. The confounder contributes globally to all 
 % variables(genes). Here are details for the data:
 % X: the N by p data matrix, number of samples=30, number of variables=400
-% Y: the N by q confounder matrix, q=3, representing three groups of data
+% Y: the N by q confounder matrix, q=3, Y is chosen such that the penalty 
+% term equals the between groups sum of squares.
 % lab: the labels (used in the plots in the user's guide)
-% colors: colors of the labels (used in the plots in the user's guide)
+% group: the group labels
 % true_pattern: the true underlying latent pattern
 %%
 
@@ -22,18 +23,16 @@ dataA = load('data_example2.mat');
 X = dataA.X;
 Y = dataA.Y;
 lab = dataA.lab;
-colors = dataA.colors;
 true_pattern = dataA.true_pattern;
-% In this simulated example, the confounder is a factor with three levels, 
-% corresponding to three groups. Instead of assuming that the confounder 
-% affects all variables (example 1), we assume that it affects only a subset
-% of variables (half of the variables in this example). Here are details 
-% for the data: 
-% X: the N by p data matrix, number of samples=30, number of variables=400
-% Y: the N by q confounder matrix, q=3, representing three groups of data
+confound_pattern = dataA.confound_pattern;
+% In this simulated example, the confounder is assumed to be continuous and 
+% it contributes a global trend to the data. Here are details for the data:
+% X: the N by p data matrix, number of samples=10, number of variables=400
+% Y the N by q confounder matrix, q=1, 
+% representing a continuous confounder. Y is centered.
 % lab: the labels (used in the plots in the user's guide)
-% colors: colors of the labels (used in the plots in the user's guide)
 % true_pattern: the true underlying latent pattern
+% confound_pattern: the pattern for the confounder
 %%
 
 %% data example 3
@@ -42,68 +41,18 @@ X = dataA.X;
 Y = dataA.Y;
 lab = dataA.lab;
 true_pattern = dataA.true_pattern;
-confound_pattern = dataA.confound_pattern;
-% In this simulated example, the confounder is assumed to be continuous and 
-% it contributes a global trend to the data. Here are details for the data:
-% X: the N by p data matrix, number of samples=10, number of variables=400
-% Y the N by q confounder matrix, q=1, takes value from 1 to 10, 
-% representing a continuous confounder
-% lab: the labels (used in the plots in the user's guide)
-% colors: colors of the labels (used in the plots in the user's guide)
-% true_pattern: the true underlying latent pattern
-% confound_pattern: the pattern for the confounder
-%%
-
-%% data example 4
-dataA = load('data_example4.mat');
-X = dataA.X;
-Y = dataA.Y;
-lab = dataA.lab;
-colors = dataA.colors;
-true_pattern = dataA.true_pattern;
 % The confounder is unobserved and we only know the primary variable of 
 % interest (the biological conditions). There are 10 biological conditions, 
 % each with 3 replicates. The variation is shared among replicates for half 
 % of the genes and not shared for the other genes. 
 % Here are details for the data:
 % X: the N by p data matrix, number of samples=30, number of variables=400
-% Y: the N by q confounder matrix, q=30. Y is designed such that samples 
-% within the same biological condition are shrinked together. 
+% Y: the N by q confounder matrix, q=30. For a biological condition, 
+% treating the 3 replicates as 3 groups, it can be shown that the penalty term 
+% equals the summation of the between groups sum of squares over the biological conditions.
 % Details are provided in the user's guide.
 % lab: labels for the biological conditions.
 % true_pattern: the true underlying latent pattern
-%%
-
-%% data example 5
-dataA = load('data_example5.mat');
-X = dataA.X;
-Y = dataA.Y;
-% Example 5 is similar to example 2, except that the true loadings are sparse. 
-% The variables with non-zero loadings are entries 301-400.
-% Here are details for the data:
-% X: the N by p data matrix, number of samples=30, number of variables=400.
-% Y: the N by q confounder matrix, q=3, corresponding to three biological groups.
-%%
-
-%% The human brain exon array dataset, time window 1
-dataA = load('data_brain_w1.mat');
-X = dataA.X;
-Y = dataA.Y;
-Yid = dataA.Yid;
-regions = dataA.regions; 
-hemispheres = dataA.hemispheres;
-donor_labs = dataA.donor_labs;
-% A subset of 1,000 genes are included for demonstration purpose.
-% The variables with non-zero loadings are entries 301-400.
-% Here are details for the data:
-% X: the N by p data matrix, N is the number of samples and p is the number of genes.
-% Y: the N by q confounder matrix (See implementation details in the user's guide).
-% Yid labels for the individuals, left and right hemispheres from the same 
-% donors are treated as different individuals (See implementation details 
-% in the user's guide).
-% regions: labels for the brain regions
-% hemispheres: '1' represents left hemisphere, '3' represents right hemisphere
-% donor_labs: labels for the donors
 %%
 
 %% The human brain exon array dataset, time window 2
@@ -115,13 +64,28 @@ regions = dataA.regions;
 hemispheres = dataA.hemispheres;
 donor_labs = dataA.donor_labs;
 % A subset of 1,000 genes are included for demonstration purpose.
-% The variables with non-zero loadings are entries 301-400.
 % Here are details for the data:
 % X: the N by p data matrix, N is the number of samples and p is the number of genes.
 % Y: the N by q confounder matrix (See implementation details in the user's guide).
-% Yid labels for the individuals, left and right hemispheres from the same 
+% Yid: labels for the individuals, left and right hemispheres from the same 
 % donors are treated as different individuals (See implementation details 
 % in the user's guide).
+% regions: labels for the brain regions
+% hemispheres: '1' represents left hemisphere, '3' represents right hemisphere
+% donor_labs: labels for the donors
+%%
+
+%% The human brain exon array dataset, time window 5
+dataA = load('data_brain_w5.mat');
+X = dataA.X;
+Y = dataA.Y;
+regions = dataA.regions; 
+hemispheres = dataA.hemispheres;
+donor_labs = dataA.donor_labs;
+% A subset of 1,000 genes are included for demonstration purpose.
+% Here are details for the data:
+% X: the N by p data matrix, N is the number of samples and p is the number of genes.
+% Y: the N by q confounder matrix (See implementation details in the user's guide).
 % regions: labels for the brain regions
 % hemispheres: '1' represents left hemisphere, '3' represents right hemisphere
 % donor_labs: labels for the donors

@@ -13,9 +13,9 @@ Here are details for the data:
 \details{
 \itemize{
   \item X the N by p data matrix, number of samples=30, number of variables=400
-  \item Y the N by q confounder matrix, q=3, representing three groups of data
+  \item Y the N by q confounder matrix, q=3. Y is chosen such that the penalty term equals the between groups sum of squares.
   \item lab the labels (used in the plots in the user's guide)
-  \item colors colors of the labels (used in the plots in the user's guide)
+  \item group the group labels
   \item true_pattern the true underlying latent pattern
 }
 }

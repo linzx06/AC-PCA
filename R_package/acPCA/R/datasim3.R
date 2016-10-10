@@ -7,8 +7,9 @@
 #'
 #' \itemize{
 #'   \item X the N by p data matrix, number of samples=30, number of variables=400
-#'   \item Y the N by q confounder matrix, q=30. Y is designed such that samples within the
-#'    same biological condition are shrinked together. Details are provided in the user's guide.
+#'   \item Y the N by q confounder matrix, q=30. For a biological condition, 
+#'   treating the 3 replicates as 3 groups, it can be shown that the penalty term 
+#'   equals the summation of the between groups sum of squares over the biological conditions.
 #'   \item lab labels for the biological conditions.
 #'   \item true_pattern the true underlying latent pattern
 #' }

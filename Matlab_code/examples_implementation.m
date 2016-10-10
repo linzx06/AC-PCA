@@ -7,15 +7,18 @@ dataA = load('data_example1.mat');
 % input for acPCAcv and acPCA
 X = dataA.X;
 Y = dataA.Y;
-lambdas = 0:0.05:2;
+lambdas = 0:0.1:20;
 nPC = 2; 
 kernel = 'linear';
 bandwidth = 1; %bandwidth for gaussian kernel. Provide any number for 'linear'
 % kernel, it won't affect the result.
+anov = 1; % whether Y is chosen such that the penalty term has the between 
+% groups sum of squares interpretation
+eval = 0; 
 
-result1cv = acPCAcv(X, Y, lambdas, nPC, kernel, bandwidth);
-lambda = result1cv.best_lambda;
-result1 = acPCA(X, Y, lambda, nPC, kernel, bandwidth);
+result1tune = acPCAtuneLambda(X, Y, lambdas, nPC, kernel, bandwidth, anov);
+lambda = result1tune.best_lambda;
+result1 = acPCA(X, Y, lambda, nPC, kernel, bandwidth, eval);
 result1.Xv % the principal components, p by nPC matrix
 result1.v % the projected data, i.e. X times v
 %%

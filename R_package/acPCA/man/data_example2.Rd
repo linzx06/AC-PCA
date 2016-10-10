@@ -13,9 +13,8 @@ Here are details for the data:
 \details{
 \itemize{
   \item X the N by p data matrix, number of samples=10, number of variables=400
-  \item Y the N by q confounder matrix, q=1, takes value from 1 to 10, representing a continuous confounder
+  \item Y the N by q confounder matrix, q=1, representing a continuous confounder. Y is centered.
   \item lab the labels (used in the plots in the user's guide)
-  \item colors colors of the labels (used in the plots in the user's guide)
   \item true_pattern the true underlying latent pattern
   \item confound_pattern the pattern for the confounder
 }

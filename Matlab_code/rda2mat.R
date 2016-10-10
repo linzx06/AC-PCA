@@ -3,23 +3,15 @@ library(R.matlab)
 
 data("data_example1")
 names(data_example1)
-writeMat("data_example1.mat", X=data_example1$X, Y=data_example1$Y, lab=data_example1$lab, colors=data_example1$colors, true_pattern=data_example1$true_pattern)
+writeMat("data_example1.mat", X=data_example1$X, Y=data_example1$Y, lab=data_example1$lab, group=data_example1$group, true_pattern=data_example1$true_pattern)
 
 data("data_example2")
 names(data_example2)
-writeMat("data_example2.mat", X=data_example2$X, Y=data_example2$Y, lab=data_example2$lab, colors=data_example2$colors, true_pattern=data_example2$true_pattern)
+writeMat("data_example2.mat", X=data_example2$X, Y=data_example2$Y, lab=data_example2$lab, true_pattern=data_example2$true_pattern, confound_pattern=data_example2$confound_pattern)
 
 data("data_example3")
 names(data_example3)
-writeMat("data_example3.mat", X=data_example3$X, Y=data_example3$Y, lab=data_example3$lab, true_pattern=data_example3$true_pattern, confound_pattern=data_example3$confound_pattern)
-
-data("data_example4")
-names(data_example4)
-writeMat("data_example4.mat", X=data_example4$X, Y=data_example4$Y, lab=data_example4$lab, true_pattern=data_example4$true_pattern)
-
-data("data_example5")
-names(data_example5)
-writeMat("data_example5.mat", X=data_example5$X, Y=data_example5$Y)
+writeMat("data_example3.mat", X=data_example3$X, Y=data_example3$Y, lab=data_example3$lab, true_pattern=data_example3$true_pattern)
 
 data("data_brain_w1")
 names(data_brain_w1)
@@ -32,6 +24,12 @@ names(data_brain_w2)
 writeMat("data_brain_w2.mat", X=data_brain_w2$X, Y=data_brain_w2$Y,
          Yid=data_brain_w2$Yid, regions=data_brain_w2$regions, hemispheres=data_brain_w2$hemispheres,
          donor_labs=data_brain_w2$donor_labs)
+
+data("data_brain_w5")
+names(data_brain_w5)
+writeMat("data_brain_w5.mat", X=data_brain_w5$X, Y=data_brain_w5$Y,
+         regions=data_brain_w5$regions, hemispheres=data_brain_w5$hemispheres,
+         donor_labs=data_brain_w5$donor_labs)
 
 data("data_fly_worm")
 names(data_fly_worm)
