@@ -23,13 +23,14 @@
 #' data(data_example1)
 #' X <- data_example1$X; Y <- data_example1$Y 
 #'
-#' ##first tune lambda, and then use the best lambda. Linear kernel
-#' result_cv_linear <- acPCAtuneLambda(X=X, Y=Y, nPC=2, lambdas=seq(0, 20, 0.2), kernel="linear")
-#' result_linear <- acPCA(X=X, Y=Y, nPC=2, lambda=result_cv_linear$best_lambda, nPC=2, kernel="linear")
+#' ##first tune lambda, and then use the best lambda 
+#' # linear kernel, the penalty term has the ANOVA interpretation
+#' result_tune_linear <- acPCAtuneLambda(X=X, Y=Y, nPC=2, lambdas=seq(0, 20, 0.05), kernel="linear", anov=T)
+#' result_linear <- acPCA(X=X, Y=Y, nPC=2, lambda=result_tune_linear$best_lambda, kernel="linear")
 #' 
-#' ##Gaussian kernel
-#' result_cv_gaussian <- acPCAtuneLambda(X=X, Y=Y, nPC=2, lambdas=seq(0, 20, 0.2), kernel="gaussian", bandwidth=1)
-#' result_gaussian <- acPCA(X=X, Y=Y, nPC=2, lambda=result_cv_gaussian$best_lambda, kernel="gaussian", bandwidth=1)
+#' # Gaussian kernel, the penalty term does not have the ANOVA interpretation
+#' result_tune_gaussian <- acPCAtuneLambda(X=X, Y=Y, nPC=2, lambdas=seq(0, 20, 0.05), kernel="gaussian", bandwidth=1, anov=F)
+#' result_gaussian <- acPCA(X=X, Y=Y, nPC=2, lambda=result_tune_gaussian$best_lambda, kernel="gaussian", bandwidth=1)
 acPCAtuneLambda <- function(X, Y, nPC, lambdas, centerX=T, centerY=T, scaleX=F, scaleY=F, kernel=c("linear", "gaussian"), bandwidth=NULL, anov=T, perc=0.05, quiet=F){
   ####check whether a whole row in X is missing
   Xmis <- apply(X, 1, function(row){sum(!is.na(row))})

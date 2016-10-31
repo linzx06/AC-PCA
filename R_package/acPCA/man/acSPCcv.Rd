@@ -14,7 +14,7 @@ acSPCcv(X, Y, c1 = NULL, c2s, v_ini, v_substract = NULL, X4Y = NULL,
 
 \item{Y}{the n by q confounder matrix, where n is the number of samples, q is the number of confounding factors. Missing values in Y should be labeled as NA.}
 
-\item{c1}{non-negative tuning parameter. Default is set to v'X4Y'KX4Yv. Optional.}
+\item{c1}{non-negative tuning parameter. Default is set to v_ini'X4Y'KX4Yv_ini. Optional.}
 
 \item{c2s}{a vector of non-negative tuning parameters controlling sparsity.}
 
@@ -56,14 +56,23 @@ Perform cross-validation to tune the sparsity parameter c2 in function acSPC
 }
 \examples{
 load_all()
-data(data_example5)
-X <- data_example5$X; Y <- data_example5$Y
-result1 <- acPCA(X=X, Y=Y, lambda=1, kernel="linear")
-v_ini <- result1$v[,1]
-resultcv_spc1_coarse <- acSPCcv( X=X, Y=Y, c2s=seq(1, 0, -0.1)*sum(abs(v_ini)), 
-                                 v_ini=v_ini, kernel="linear") 
-resultcv_spc1_fine <- acSPCcv( X=X, Y=Y, c2s=seq(0.7, 0.4, -0.02)*sum(abs(v_ini)), 
-                               v_ini=v_ini, kernel="linear") 
-result_spc1 <- acSPC( X=X, Y=Y, c2=resultcv_spc1_fine$best_c2, v_ini=v_ini, kernel="linear") 
+data(data_brain_w2)
+X <- data_brain_w2$X; Y <- data_brain_w2$Y
+### we first tune lambda
+result_tune <- acPCAtuneLambda(X=X, Y=Y, nPC=2, lambdas=seq(0, 20, 0.05),
+                             anov=T, kernel = "linear", quiet=T)
+result <- acPCA(X=X, Y=Y, lambda=result_tune$best_lambda, kernel="linear", nPC=2)
+### the initial v
+v_ini <- as.matrix(result$v[,1])
+### a coarse search first
+c2s <- seq(1, 0, -0.1)*sum(abs(v_ini))
+resultcv_spc1_coarse <- acSPCcv( X=X, Y=Y, c2s=c2s, v_ini=v_ini,
+                                 kernel="linear", quiet=T, fold=10)
+### a fine search
+c2s <- seq(0.9, 0.7, -0.02)*sum(abs(v_ini))
+resultcv_spc1_fine <- acSPCcv( X=X, Y=Y, c2s=c2s, v_ini=v_ini,
+                               kernel="linear", quiet=T, fold=10)
+result_spc1 <- acSPC( X=X, Y=Y, c2=resultcv_spc1_fine$best_c2,
+                      v_ini=v_ini, kernel="linear")
 }
 

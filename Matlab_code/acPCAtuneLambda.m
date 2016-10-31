@@ -99,7 +99,9 @@ optseigs.issym = 1;
 ratio = zeros(length(lambdas), nPC);
 for lab = 1:length(lambdas)
     if (~opts.quiet)
-        disp([num2str(round(lab/length(lambdas)*100)) '% completed']);
+        if (rem(lab,round(length(lambdas)/10))==0)
+            disp([num2str(round(lab/length(lambdas)*100)) '% completed']);
+        end
     end
     lambda = lambdas(lab);
     calAv = @(v) (X' - lambda*X'*K)*(X*v);

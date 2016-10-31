@@ -37,9 +37,11 @@
 #' ##use Gaussian kernel
 #' result_gaussian <- acPCA(X=X, Y=Y, lambda=0.5, kernel="gaussian", bandwidth=1, nPC=2)
 #' 
-#' ##first tune lambda, and then use the best lambda
-#' result_cv <- acPCAcv(X=X, Y=Y, lambdas=seq(0, 1, 0.05), kernel="linear", nPC=2, plot=T)
-#' result <- acPCA(X=X, Y=Y, lambda=result_cv$best_lambda, kernel="linear", nPC=2)
+#' ##first tune lambda, and then use the best lambda 
+#' # linear kernel, the penalty term has the ANOVA interpretation
+#' result_tune_linear <- acPCAtuneLambda(X=X, Y=Y, nPC=2, lambdas=seq(0, 20, 0.05), kernel="linear", anov=T)
+#' result_linear <- acPCA(X=X, Y=Y, nPC=2, lambda=result_tune_linear$best_lambda, nPC=2, kernel="linear")
+#'
 acPCA <- function(X, Y, nPC, lambda, eval=F, numPerm=100, alpha=0.05, plot=T, centerX=T, centerY=T, scaleX=F, scaleY=F, kernel=c("linear", "gaussian"), bandwidth=NULL){
   ####check whether a whole row in X is missing
   Xmis <- apply(X, 1, function(row){sum(!is.na(row))})

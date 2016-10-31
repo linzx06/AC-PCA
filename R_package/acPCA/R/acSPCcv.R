@@ -3,7 +3,7 @@
 #' @param X the n by p data matrix, where n is the number of samples, p is the number of variables. Missing values in X should be labeled as NA. If a whole sample in X is missing, it should be removed.
 #' @param Y the n by q confounder matrix, where n is the number of samples, q is the number of confounding factors. Missing values in Y should be labeled as NA.
 #' @param X4Y the "X" used to calculate the empirical Hilbert Schmidt criterion. Default is set to X. Optional.
-#' @param c1 non-negative tuning parameter. Default is set to v'X4Y'KX4Yv. Optional. 
+#' @param c1 non-negative tuning parameter. Default is set to v_ini'X4Y'KX4Yv_ini. Optional. 
 #' @param c2s a vector of non-negative tuning parameters controlling sparsity.
 #' @param v_ini the initial v. Recommended to be the estimate of the non-sparse version. 
 #' @param v_substract the principal components to be subtracted. A p by k matrix, where k is the number of PCs to be substracted. Optional.
@@ -25,15 +25,24 @@
 #' @export
 #' @examples
 #' load_all()
-#' data(data_example5)
-#' X <- data_example5$X; Y <- data_example5$Y
-#' result1 <- acPCA(X=X, Y=Y, lambda=1, kernel="linear")
-#' v_ini <- result1$v[,1]
-#' resultcv_spc1_coarse <- acSPCcv( X=X, Y=Y, c2s=seq(1, 0, -0.1)*sum(abs(v_ini)), 
-#'                                  v_ini=v_ini, kernel="linear") 
-#' resultcv_spc1_fine <- acSPCcv( X=X, Y=Y, c2s=seq(0.7, 0.4, -0.02)*sum(abs(v_ini)), 
-#'                                v_ini=v_ini, kernel="linear") 
-#' result_spc1 <- acSPC( X=X, Y=Y, c2=resultcv_spc1_fine$best_c2, v_ini=v_ini, kernel="linear") 
+#' data(data_brain_w2)
+#' X <- data_brain_w2$X; Y <- data_brain_w2$Y
+#' ### we first tune lambda
+#' result_tune <- acPCAtuneLambda(X=X, Y=Y, nPC=2, lambdas=seq(0, 20, 0.05),
+#'                              anov=T, kernel = "linear", quiet=T)
+#' result <- acPCA(X=X, Y=Y, lambda=result_tune$best_lambda, kernel="linear", nPC=2)
+#' ### the initial v
+#' v_ini <- as.matrix(result$v[,1])
+#' ### a coarse search first
+#' c2s <- seq(1, 0, -0.1)*sum(abs(v_ini))
+#' resultcv_spc1_coarse <- acSPCcv( X=X, Y=Y, c2s=c2s, v_ini=v_ini,
+#'                                  kernel="linear", quiet=T, fold=10)
+#' ### a fine search
+#' c2s <- seq(0.9, 0.7, -0.02)*sum(abs(v_ini))
+#' resultcv_spc1_fine <- acSPCcv( X=X, Y=Y, c2s=c2s, v_ini=v_ini,
+#'                                kernel="linear", quiet=T, fold=10)
+#' result_spc1 <- acSPC( X=X, Y=Y, c2=resultcv_spc1_fine$best_c2,
+#'                       v_ini=v_ini, kernel="linear")
 acSPCcv <- function( X, Y, c1=NULL, c2s, v_ini, v_substract=NULL, X4Y=NULL, kernel=c("linear", "gaussian"), bandwidth=NULL, centerX=T, centerY=T, scaleX=F, scaleY=F, maxiter=25, delta=10^-4, fold=10, plot=T, quiet=F){
   ####if Y is a vector, change it to a matrix
   if (is.null(dim(Y))){

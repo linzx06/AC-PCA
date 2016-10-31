@@ -81,7 +81,6 @@ if (~strcmp(X4Y,'d'))
         error('The numbers of samples in X4Y and Y do not match')
     end
 end
-[nY, ~] = size(X4Y);
 
 % center the X matrix
 if (opts.centerX)
@@ -131,7 +130,8 @@ lab = unidrnd(opts.fold, size(X));
 difsqr = nan(opts.fold, length(c2s));
 
 opts1 = [];  
-opts1.centerX = opts.centerX; 
+opts1.centerX = opts.centerX;
+opts1.centerY = opts.centerY; 
 opts1.scaleX = opts.scaleX;
 opts1.scaleY = opts.scaleY;
 opts1.maxiter = opts.maxiter;

@@ -16,7 +16,7 @@ acSPC(X, Y, X4Y = NULL, c1 = NULL, c2, v_ini, v_substract = NULL,
 
 \item{X4Y}{the "X" used to calculate the empirical Hilbert Schmidt criterion. Default is set to X. Optional.}
 
-\item{c1}{non-negative tuning parameter. Default is set to v'X4Y'KX4Yv. Optional.}
+\item{c1}{non-negative tuning parameter. Default is set to v_ini'X4Y'KX4Yv_ini. Optional.}
 
 \item{c2}{non-negative tuning parameter controlling sparsity.}
 
@@ -49,12 +49,11 @@ Perform sparse AC-PCA for variable selection
 }
 \examples{
 load_all()
-data(data_example5)
-X <- data_example5$X ###the data matrix
-Y <- data_example5$Y
+data(data_brain_w2)
+X <- data_brain_w2$X; Y <- data_brain_w2$Y
 
-result1 <- acPCA(X=X, Y=Y, lambda=1, kernel="linear")
-v_ini <- result1$v[,1]
+result <- acPCA(X=X, Y=Y, lambda=5, kernel="linear", nPC=2)
+v_ini <- result$v[,1]
 result_spc1 <- acSPC( X=X, Y=Y, c2=0.5*sum(abs(v_ini)), 
                       v_ini=v_ini, kernel="linear")
 ###examples with more details are provided in the function acSPCcv

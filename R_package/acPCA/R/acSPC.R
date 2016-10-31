@@ -3,7 +3,7 @@
 #' @param X the n by p data matrix, where n is the number of samples, p is the number of variables. Missing values in X should be labeled as NA. If a whole sample in X is missing, it should be removed.
 #' @param Y the n by q confounder matrix, where n is the number of samples, q is the number of confounding factors. Missing values in Y should be labeled as NA.
 #' @param X4Y the "X" used to calculate the empirical Hilbert Schmidt criterion. Default is set to X. Optional.
-#' @param c1 non-negative tuning parameter. Default is set to v'X4Y'KX4Yv. Optional. 
+#' @param c1 non-negative tuning parameter. Default is set to v_ini'X4Y'KX4Yv_ini. Optional. 
 #' @param c2 non-negative tuning parameter controlling sparsity.
 #' @param v_ini the initial v. Recommended to be the estimate of the non-sparse version. 
 #' @param v_substract the principal components to be subtracted. A p by k matrix, where k is the number of PCs to be substracted. Optional.
@@ -21,12 +21,11 @@
 #' @export
 #' @examples
 #' load_all()
-#' data(data_example5)
-#' X <- data_example5$X ###the data matrix
-#' Y <- data_example5$Y
+#' data(data_brain_w2)
+#' X <- data_brain_w2$X; Y <- data_brain_w2$Y
 #'
-#' result1 <- acPCA(X=X, Y=Y, lambda=1, kernel="linear")
-#' v_ini <- result1$v[,1]
+#' result <- acPCA(X=X, Y=Y, lambda=5, kernel="linear", nPC=2)
+#' v_ini <- result$v[,1]
 #' result_spc1 <- acSPC( X=X, Y=Y, c2=0.5*sum(abs(v_ini)), 
 #'                       v_ini=v_ini, kernel="linear")
 #' ###examples with more details are provided in the function acSPCcv
