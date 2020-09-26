@@ -7,7 +7,7 @@ X. Xu, M. Li, N. Sestan, H. Zhao, W. H. Wong:
 AC-PCA: simultaneous dimension reduction and adjustment for confounding variation
 bioRxiv, http://dx.doi.org/10.1101/040485
 
-R package
+R package: make sure you have the latest R version
 
 A) To install the R package:
 
