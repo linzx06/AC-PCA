@@ -11,9 +11,11 @@ R package
 
 A) To install the R package:
 
-1. Download 'acPCA_version_number.tar.gz' in "linzx06/AC-PCA/R_package/";
+1. In R/Rstudio, type install.packages("RSpectra") to install the package "RSpectra";
 
-2. In R/Rstudio, type install.packages("acPCA_version_number.tar.gz", repos = NULL, type="source")
+2. Download 'acPCA_version_number.tar.gz' in "linzx06/AC-PCA/R_package/";
+
+3. In R/Rstudio, type install.packages("acPCA_version_number.tar.gz", repos = NULL, type="source")
 
 B) User's guide for the R package, "linzx06/AC-PCA/R_user_guide.pdf"
 
